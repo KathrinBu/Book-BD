@@ -28,8 +28,8 @@ public class HelloController {
         initTable(books);
         startChangeTracking(books);
         button.setOnAction(a->System.out.println(isbnMap));
-        fileWriter(books);
-        button.setOnAction(a->fileWriter(books));
+        fileWriter(isbnMap);
+        button.setOnAction(a->fileWriter(isbnMap));
     }
 
     public void startChangeTracking(ObservableList<Book> books){
@@ -37,7 +37,7 @@ public class HelloController {
             b.titleProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
             b.yearProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
         }}
-    public void fileWriter(ObservableList<Book> books){
+    public void fileWriter(HashMap<Integer, Book> isbnMap){
       try{  FileWriter fileWriter=new FileWriter("2.txt",true);//если есть"true"список не будет
           fileWriter.write(isbnMap.toString());                     //обнуляться,данные в него будут добавляться
         fileWriter.close();
