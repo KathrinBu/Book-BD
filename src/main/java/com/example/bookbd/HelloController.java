@@ -38,14 +38,13 @@ public class HelloController {
             b.yearProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
         }}
     public void fileWriter(ObservableList<Book> books){
-      try{  FileWriter fileWriter=new FileWriter("2.txt");
-          fileWriter.write(books.toString());
+      try{  FileWriter fileWriter=new FileWriter("2.txt",true);//если есть"true"список не будет
+          fileWriter.write(isbnMap.toString());                     //обнуляться,данные в него будут добавляться
         fileWriter.close();
     } catch (IOException e){
           System.out.println(":((");
       }
     }
-
 
     public void initTable(ObservableList<Book> books )
     {
