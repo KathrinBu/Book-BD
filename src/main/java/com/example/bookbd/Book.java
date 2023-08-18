@@ -10,9 +10,9 @@ import java.util.List;
 public class Book {
 
 
-    SimpleIntegerProperty isbn;
-    SimpleStringProperty title;
-    SimpleIntegerProperty year;
+  private   SimpleIntegerProperty isbn;
+  private   SimpleStringProperty title;
+   private SimpleIntegerProperty year;
 
     @Override
     public String toString() {

@@ -1,6 +1,7 @@
 package com.example.bookbd;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,13 +21,20 @@ public class HelloController {
     TableView tableView;
     @FXML
     Button button;
+    @FXML
+    Button but1;
+    @FXML
+    Button btn3;
 
     HashMap<Integer, Book> isbnMap = new HashMap<>();
 
     public void initialize() throws SQLException, IOException {
-        ObservableList<Book> books = zapolnenieBooksFromBD();
+        ObservableList<Book> books = FXCollections.observableArrayList();// пустой список
+        enableChangeTracking(books);
+        books.addAll(   zapolnenieBooksFromBD());
+
+       // startChangeTracking(books);
         initTable(books);
-        startChangeTracking(books);
         button.setOnAction(a->System.out.println(isbnMap));
         fileWriter(isbnMap);
         button.setOnAction(a->fileWriter(isbnMap));
@@ -37,6 +45,18 @@ public class HelloController {
             b.titleProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
             b.yearProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
         }}
+
+    public void enableChangeTracking(ObservableList<Book> books){
+        books.addListener((ListChangeListener<? super Book>) change ->{
+                while (change.next()) {
+                    if(change.wasAdded())
+                        for (Book b:change.getAddedSubList()) {
+                        b.titleProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
+                        b.yearProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
+                        }
+                    }
+                    });
+    }
     public void fileWriter(HashMap<Integer, Book> isbnMap){
       try{  FileWriter fileWriter=new FileWriter("2.txt",true);//если есть"true"список не будет
           fileWriter.write(isbnMap.toString());                     //обнуляться,данные в него будут добавляться
@@ -62,6 +82,22 @@ public class HelloController {
         tableView.getColumns().add(columnC);
         tableView.setItems(books);
         tableView.setEditable(true);
+    }
+    public void saveToDB() throws SQLException {
+    isbnMap.clear();
+        Connection conn =  connectToDB();
+        Statement st = conn.createStatement();
+        PreparedStatement pst=conn.prepareStatement("UPDATE book SET title = ? , year = ? WHERE isbn = ? ");
+        for (Book bk:isbnMap.values() ) {
+//            String query = "UPDATE book SET title= '"+bk.getTitle()+"' ,year= "+ bk.getYear()+" ,isbn= "+bk.getIsbn();
+//            st.execute(query);
+            pst.setString(1, bk.getTitle());
+            pst.setInt(2,bk.getYear());
+            pst.setInt(3,bk.getIsbn());
+            pst.execute();
+        }
+        pst.close();
+    //    st.close();
     }
 
 

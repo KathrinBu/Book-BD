@@ -13,5 +13,7 @@
          </columnResizePolicy>
       </TableView>
       <Button fx:id="button" layoutX="516.0" layoutY="67.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="70.0" text="SAVE" />
+      <Button fx:id="but1" layoutX="525.0" layoutY="143.0" mnemonicParsing="false" onAction="#saveToDB" prefHeight="100.0" prefWidth="52.0" text="TO DB" textFill="#c91e96" />
+      <Button fx:id="btn3" layoutX="3.0" layoutY="14.0" mnemonicParsing="false" onAction="#enableChangeTracking" prefHeight="25.0" prefWidth="591.0" text="обновить" />
    </children>
 </AnchorPane>
