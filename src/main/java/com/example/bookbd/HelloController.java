@@ -10,7 +10,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
+import java.util.HashMap;
 
 public class HelloController {
     @FXML
@@ -18,13 +21,32 @@ public class HelloController {
     @FXML
     Button button;
 
-//    FXCollections.observableArrayList();
+    HashMap<Integer, Book> isbnMap = new HashMap<>();
 
-    public void initialize() throws SQLException {
+    public void initialize() throws SQLException, IOException {
         ObservableList<Book> books = zapolnenieBooksFromBD();
         initTable(books);
+        startChangeTracking(books);
+        button.setOnAction(a->System.out.println(isbnMap));
+        fileWriter(books);
+        button.setOnAction(a->fileWriter(books));
     }
-@FXML
+
+    public void startChangeTracking(ObservableList<Book> books){
+        for (Book b: books) {
+            b.titleProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
+            b.yearProperty().addListener((val,o,n)->isbnMap.put(b.getIsbn(),b));
+        }}
+    public void fileWriter(ObservableList<Book> books){
+      try{  FileWriter fileWriter=new FileWriter("2.txt");
+          fileWriter.write(books.toString());
+        fileWriter.close();
+    } catch (IOException e){
+          System.out.println(":((");
+      }
+    }
+
+
     public void initTable(ObservableList<Book> books )
     {
         tableView.getColumns().clear();

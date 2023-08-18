@@ -14,6 +14,11 @@ public class Book {
     SimpleStringProperty title;
     SimpleIntegerProperty year;
 
+    @Override
+    public String toString() {
+        return "isbn=" + isbn.get();
+    }
+
     public Book(Integer isbn, String title, Integer year) {
         this.isbn = new SimpleIntegerProperty(isbn);
         this.title = new SimpleStringProperty(title);
